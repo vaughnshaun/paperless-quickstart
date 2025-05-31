@@ -37,3 +37,27 @@ Run backup script under system user
 ```bash
 sudo -u paperless-backup-user ENV_FILE="/home/vaughnshaun/paperless-ngx/paperless-backup.env" BACKUP_ENCRYPTION_PASSWORD="your-encryption-password" paperless-backup/paperless-backup.sh
 ```
+
+### Run Backup Script System Wide
+Move script to a system wide local and make executable
+```bash
+# Create myscripts directory (myscripts is where you should keep all custom scripts).
+sudo mkdir -p /opt/myscripts
+
+# Inside of the main repo directory, copy paperless-backup to the myscripts folder 
+sudo cp -r paperless-backup /opt/myscripts/paperless-backup
+
+# Verfiy path
+which paperless-backup/paperless-backup.sh
+
+# Set dir permissions (traversable)
+sudo find /opt/myscripts/paperless-backup -type d -exec chmod 755 {} \;
+
+# Set script file permissions (only .sh or known scripts)
+sudo find /opt/myscripts/paperless-backup -type f -name "*.sh" -exec chmod 755 {} \;
+```
+
+Run the backup
+```bash
+sudo -u paperless-backup-user ENV_FILE="/home/vaughnshaun/paperless-ngx/paperless-backup.env" BACKUP_ENCRYPTION_PASSWORD="your-password" paperless-backup/paperless-backup.sh
+```
