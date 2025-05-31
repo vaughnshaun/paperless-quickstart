@@ -9,7 +9,15 @@ if [ -z "$ENV_FILE" ]; then
   ENV_FILE="$SCRIPT_DIR/paperless-backup.env"
 fi
 
-export $(grep -v '^#' "$ENV_FILE" | xargs)
+# Assume ENV_FILE is already set or passed in
+if [[ "$ENV_FILE" == ~* ]]; then
+    # Only expand if it starts with ~
+    EXPANDED_ENV_FILE=$(eval echo "$ENV_FILE")
+else
+    EXPANDED_ENV_FILE="$ENV_FILE"
+fi
+
+export $(grep -v '^#' "$EXPANDED_ENV_FILE" | xargs)
 
 if [ -z "$BACKUP_DIR" ]; then
   BACKUP_DIR="$(pwd)/paperless-backups"
@@ -43,11 +51,11 @@ encrypt_file() {
 }
 
 log "Backup Docker config files"
-cp docker-compose.env "$BACKUP_DIR/docker-compose.env"
-cp docker-compose.yml "$BACKUP_DIR/docker-compose.yml"
+cp "$PAPERLESS_DIR/docker-compose.env" "$BACKUP_DIR/docker-compose.env"
+cp "$PAPERLESS_DIR/docker-compose.yml" "$BACKUP_DIR/docker-compose.yml"
 
 log "🔻 Stopping Paperless containers (with timeout)..."
-if ! timeout 60s docker compose stop; then
+if ! timeout 60s docker compose --project-directory "$PAPERLESS_DIR"  stop; then
     log "❌ ERROR: doker composestop timed out or failed."
     exit 1
 fi
@@ -79,13 +87,13 @@ else
 fi
 
 log "🔼 Restarting Paperless containers..."
-if ! timeout 60s docker compose up -d; then
+if ! timeout 60s docker compose --project-directory "$PAPERLESS_DIR" up -d; then
     log "❌ ERROR: dockr compose up -d timed out or failed."
     exit 1
 fi
 
 log "🔍 Checking service health..."
-if ! docker compose ps; then
+if ! docker compose --project-directory "$PAPERLESS_DIR" ps; then
     log "❌ ERROR: doker compose ps failed to report service status."
     exit 1
 fi

@@ -1,5 +1,15 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Backup the volumes
+ENV_FILE="$ENV_FILE" "$SCRIPT_DIR/paperless-tar-volumes.sh"
+
+# Send volumes to external storage provider
+ENV_FILE="$ENV_FILE" "$SCRIPT_DIR/paperless-backup-to-storage.sh"
+vaughnshaun@paperless:~$ cat paperless-backup/paperless-backup-to-storage.sh
+#!/bin/bash
+
 set -e  # Exit if any command fails
 
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
@@ -10,7 +20,15 @@ if [ -z "$ENV_FILE" ]; then
   ENV_FILE="$SCRIPT_DIR/paperless-backup.env"
 fi
 
-export $(grep -v '^#' "$ENV_FILE" | xargs)
+# Assume ENV_FILE is already set or passed in
+if [[ "$ENV_FILE" == ~* ]]; then
+    # Only expand if it starts with ~
+    EXPANDED_ENV_FILE=$(eval echo "$ENV_FILE")
+else
+    EXPANDED_ENV_FILE="$ENV_FILE"
+fi
+
+export $(grep -v '^#' "$EXPANDED_ENV_FILE" | xargs)
 
 if [ -z "$BACKUP_DIR" ]; then
   BACKUP_DIR="$(pwd)/paperless-backups"
