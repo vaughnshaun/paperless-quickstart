@@ -53,6 +53,7 @@ encrypt_file() {
 log "Backup Docker config files"
 cp "$PAPERLESS_DIR/docker-compose.env" "$BACKUP_DIR/docker-compose.env"
 cp "$PAPERLESS_DIR/docker-compose.yml" "$BACKUP_DIR/docker-compose.yml"
+cp "$PAPERLESS_DIR/paperless-backup.env" "$BACKUP_DIR/paperless-backup.env"
 
 log "🔻 Stopping Paperless containers (with timeout)..."
 if ! timeout 60s docker compose --project-directory "$PAPERLESS_DIR"  stop; then
