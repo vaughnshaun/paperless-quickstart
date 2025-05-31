@@ -27,18 +27,16 @@ id -g paperless-backup-user
 groups paperless-backup-user
 ```
 
-### Run Backup Script
-Grant execute permissions (Only needs to be run once)
-```bash
-chmod +x ./paperless-backup/paperless-backup.sh
-```
+## Setup paperless-backup.env file
+Change the variables in the env file to fit your needs. It is recommended to keep this file in your paperless-ngx folder. This file will get bundled in the backup when the backup runs.
 
+## Run Backup Script
 Run backup script under system user
 ```bash
 sudo -u paperless-backup-user ENV_FILE="/home/vaughnshaun/paperless-ngx/paperless-backup.env" BACKUP_ENCRYPTION_PASSWORD="your-encryption-password" paperless-backup/paperless-backup.sh
 ```
 
-### Run Backup Script System Wide
+## Run Backup Script System Wide
 Move script to a system wide local and make executable
 ```bash
 # Create myscripts directory (myscripts is where you should keep all custom scripts).
