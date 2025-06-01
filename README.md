@@ -19,6 +19,42 @@ sudo apt install rclone
 sudo apt install openssl
 ```
 
+### RClone and External Storage Providers
+RClone is used to interact with many external storage providers in a seamless way. The steps are simple.
+
+1. Create remote reference.
+2. Run commands to move, copy, list, delete, etc. files.
+
+### Create remote
+
+```bash
+rclone config
+```
+
+1. `n` for new remote.
+2. select storage type, for me one drive is `21`.
+3. Leave client_id and client_secret blank.
+4. `n` No to advanced config.
+5. If in headless enter `n` no for headless machine.
+6. Go to a computer that has a web browser.
+7. Run `rclone authorize "onedrive"`.
+8. Copy the whole json that is generated in the console and past to the main machine.
+
+Prints /home/username
+```bash
+echo ~
+```
+
+After the config has been updated, view it at the below
+```bash
+ls -a ~/.config/rclone
+```
+
+DON'T HAVE TO RUN. THE CREATE USER SCRIPT RUNS THIS. After confirming location copy the cofing to the paperless-backup-user folder
+```bash
+sudo cp ~/.config/rclone/rclone.conf /etc/paperless-backup-user/rclone.conf
+```
+
 ## Backup Paperless
 Before backing up paperless, a dedicated system user should be used for making backups. There is a quick script that creates the proper folder structure and permissions for the user `paperless-backup-user`.
 
@@ -45,26 +81,10 @@ id -g paperless-backup-user
 groups paperless-backup-user
 ```
 
-## RClone and External Storage Providers
-RClone is used to interact with many external storage providers in a seamless way. The steps are simple.
-
-1. Create remote reference.
-2. Run commands to move, copy, list, delete, etc. files.
-
-### Create remote
-
+View location of rclone config file in paperless-backup-user
 ```bash
-rclone config
+sudo ls -a /etc/paperless-backup-user/
 ```
-
-1. `n` for new remote.
-2. select storage type, for me one drive is `21`.
-3. Leave client_id and client_secret blank.
-4. `n` No to advanced config.
-5. If in headless enter `n` no for headless machine.
-6. Go to a computer that has a web browser.
-7. Run `rclone authorize "onedrive"`.
-8. Copy the whole json that is generated in the console and past to the main machine.
 
 ## Setup paperless-backup.env file
 Change the variables in the env file to fit your needs. It is recommended to keep this file in your paperless-ngx folder. This file will get bundled in the backup when the backup runs.
