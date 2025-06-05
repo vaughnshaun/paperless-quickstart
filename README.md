@@ -118,3 +118,8 @@ Run the backup
 ```bash
 sudo -u paperless-backup-user ENV_FILE="/home/vaughnshaun/paperless-ngx/paperless-backup.env" BACKUP_ENCRYPTION_PASSWORD="your-password" paperless-backup/paperless-backup.sh
 ```
+
+
+
+
+docker run --help

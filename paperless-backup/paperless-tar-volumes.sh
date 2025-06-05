@@ -63,7 +63,7 @@ fi
 
 log "🔹 Backing up Paperless-ngx data volume..."
 if docker run --rm --volumes-from "$CONTAINER_PAPERLESS" -v "$BACKUP_DIR":/backup ubuntu \
-    tar cfz /backup/paperless-ngx-backup-$TIMESTAMP.tar.gz /usr/src/paperless; then
+    tar cfz /backup/paperless-ngx-backup-$TIMESTAMP.tar.gz "$PAPERLESS_VOLUME"; then
     yes | encrypt_file "$BACKUP_DIR/paperless-ngx-backup-$TIMESTAMP.tar.gz"
 else
     log "❌ ERROR: Failed to back up Paperless-ngx."
@@ -72,7 +72,7 @@ fi
 
 log "🔹 Backing up Postgres volume (raw)..."
 if docker run --rm --volumes-from "$CONTAINER_DB" -v "$BACKUP_DIR":/backup ubuntu \
-    tar cfz /backup/paperless-db-backup-$TIMESTAMP.tar.gz /var/lib/postgresql/data; then
+    tar cfz /backup/paperless-db-backup-$TIMESTAMP.tar.gz "$DB_VOLUME"; then
     yes | encrypt_file "$BACKUP_DIR/paperless-db-backup-$TIMESTAMP.tar.gz"
 else
     log "❌ ERROR: Failed to back up Postgres volume."
@@ -81,7 +81,7 @@ fi
 
 log "🔹 Backing up Redis volume (if exists)..."
 if docker run --rm --volumes-from "$CONTAINER_REDIS" -v "$BACKUP_DIR":/backup ubuntu \
-    tar cfz /backup/paperless-redis-backup-$TIMESTAMP.tar.gz /data; then
+    tar cfz /backup/paperless-redis-backup-$TIMESTAMP.tar.gz "$REDIS_VOLUME"; then
     yes | encrypt_file "$BACKUP_DIR/paperless-redis-backup-$TIMESTAMP.tar.gz"
 else
     log "⚠️ WARNING: Redis backup failed or container not found (skipping)."
