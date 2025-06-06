@@ -4,7 +4,7 @@ This is to get you up and running with Paperless-ngx fast. It is as simple as do
 ## Prerequisites
 This script uses three dependencies that might not be available on most systems.
 
-1. docker (obviously required for this project since it installs Paperless-ngx using Docker).
+1. docker (obviously required for this project since it installs Paperless-ngx using Docker). [Official docker scripts for easy access]
 2. rclone for interacting with external storage providers. Data is backed up to cloud but remains private due to encryption.
 3. openssl used for encrypting the backups. So we get to use the power of the cloud, but keep our privacy.
 
